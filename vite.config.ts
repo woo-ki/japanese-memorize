@@ -1,7 +1,8 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
-// https://vitejs.dev/config/
+import fs from 'fs';
+import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const envDir = `${process.cwd()}`;
@@ -12,6 +13,7 @@ export default defineConfig(({ mode }) => {
         jsxImportSource: '@emotion/react',
       }),
       tsconfigPaths(),
+      copyGitignorePlugin(),
     ],
     server: {
       port: Number(env.VITE_APP_PORT),
@@ -28,3 +30,16 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+
+function copyGitignorePlugin(): Plugin {
+  return {
+    name: 'copy-gitignore',
+    closeBundle() {
+      const sourcePath = path.resolve(__dirname, '.gitignore');
+      const destinationPath = path.resolve(__dirname, 'dist', '.gitignore');
+
+      fs.copyFileSync(sourcePath, destinationPath);
+      console.log('.gitignore file copied to dist folder');
+    },
+  };
+}
