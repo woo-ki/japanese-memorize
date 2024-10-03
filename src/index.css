@@ -5,3 +5,8 @@
     src: url('assets/fonts/Hangeuljaemin4-Regular/Hangeuljaemin4-Regular.otf') format('opentype'),
     url('assets/fonts/Hangeuljaemin4-Regular/Hangeuljaemin4-Regular.ttf') format('truetype');
 }
+
+#root {
+    display: flex;
+    justify-content: center;
+}

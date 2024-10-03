@@ -5,6 +5,7 @@ import type { JlptType } from '@hooks/useAppStore/slices/jlpt';
 import { helperClass } from '@styles/helper.emotion.ts';
 import { globalEmotion } from '@styles/global.emotion.ts';
 import { Global } from '@emotion/react';
+import MainLayout from '@layouts/MainLayout';
 
 function App() {
   const jlptStore = useAppStore('jlpt');
@@ -27,11 +28,7 @@ function App() {
     <>
       <Global styles={helperClass} />
       <Global styles={globalEmotion} />
-      {jlptStore.jlpt.N4.words.map((word) => (
-        <div key={word.entry_id} style={{ fontWeight: '', fontSize: 30 }}>
-          {word.word} | {word.furigana} | {word.means[0]} | 😀
-        </div>
-      ))}
+      <MainLayout />
     </>
   );
 }
