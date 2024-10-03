@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="refresh" content="0; URL=./" />
+        <script type="text/javascript">
+          // 현재 경로 가져오기
+          const currentPath = window.location.pathname;
+
+          // index.html로 리다이렉트하면서 현재 경로를 쿼리 파라미터로 전달
+          window.location.replace("./?path=" + encodeURIComponent(currentPath));
+        </script>
     </head>
     <body>
     </body>

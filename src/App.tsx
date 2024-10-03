@@ -6,9 +6,12 @@ import { helperClass } from '@styles/helper.emotion.ts';
 import { globalEmotion } from '@styles/global.emotion.ts';
 import { Global } from '@emotion/react';
 import MainLayout from '@layouts/MainLayout';
+import { useSearchParams } from 'react-router-dom';
 
 function App() {
   const jlptStore = useAppStore('jlpt');
+  const [searchParams] = useSearchParams();
+  const path = searchParams.get('path');
 
   useEffect(() => {
     const jlpt: JlptType = jlptData as JlptType;
@@ -20,6 +23,10 @@ function App() {
     };
     handleResize();
     window.addEventListener('resize', handleResize);
+
+    if (path) {
+      console.log(path);
+    }
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
