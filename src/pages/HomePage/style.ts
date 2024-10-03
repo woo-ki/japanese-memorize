@@ -15,7 +15,7 @@ export const homePageStyle = (theme: Theme) => css`
       font-size: 36px;
     }
     > img {
-      width: 50px;
+      width: 60px;
     }
   }
 

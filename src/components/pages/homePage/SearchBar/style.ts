@@ -5,7 +5,7 @@ export const searchBarStyle = (theme: Theme) => css`
     width: 100%;
     border: 2px solid ${theme.colors.black};
     border-radius: 100px;
-    background: ${theme.colors.t4};
+    background: ${theme.colors.second};
 
     > #search_input {
       background: transparent;
@@ -22,8 +22,8 @@ export const searchBarStyle = (theme: Theme) => css`
       border: none;
       outline: none;
       flex-shrink: 0;
-      padding: 8px;
-      background: ${theme.colors.t};
+      padding: 8px 10px 8px 6px;
+      background: ${theme.colors.button};
       border-radius: 0 50px 50px 0;
     }
   }

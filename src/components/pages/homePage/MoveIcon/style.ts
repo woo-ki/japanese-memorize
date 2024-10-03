@@ -8,7 +8,7 @@ export const moveIconStyle = (theme: Theme) => css`
     width: 100%;
     padding-bottom: 100%;
     border: 2px solid ${theme.colors.black};
-    background: ${theme.colors.t4};
+    background: ${theme.colors.second};
     border-radius: 16px;
     position: relative;
 

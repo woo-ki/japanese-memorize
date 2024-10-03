@@ -16,7 +16,10 @@ const SearchBar = () => {
   };
   const handleClick = useCallback(() => {
     if (searchKeyword === '') return;
-    navigate(`/dictionary?level=&keyword=${searchKeyword}`);
+    navigate({
+      pathname: '/dictionary',
+      search: `?keyword=${searchKeyword}`, // 쿼리만 변경
+    });
   }, [searchKeyword, navigate]);
 
   return (
