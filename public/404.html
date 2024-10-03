@@ -3,17 +3,17 @@
     <head>
         <script type="text/javascript">
           // 현재 URL의 pathname 가져오기
-          const currentPath = window.location.pathname;
-
+          let currentPath = window.location.pathname;
+          // pathname의 맨 앞에 있는 '/' 제거
+          if (currentPath.startsWith("/")) {
+            currentPath = currentPath.slice(1);
+          }
           // 현재 URL의 쿼리 파라미터 가져오기
           const searchParams = new URLSearchParams(window.location.search);
-
           // path 쿼리 파라미터 추가 또는 업데이트
           searchParams.set('path', encodeURIComponent(currentPath));
-
           // 새로운 URL 생성 (기존 쿼리와 새로운 path 쿼리 포함)
           const newUrl = "./?" + searchParams.toString();
-
           // 새로운 URL로 리다이렉트
           window.location.replace(newUrl);
         </script>

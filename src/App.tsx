@@ -26,13 +26,13 @@ function App() {
 
     const params = Object.fromEntries(searchParams.entries());
     if (params.path) {
-      const pathname = params.path;
+      const pathname = decodeURIComponent(params.path);
       delete params.path;
       const newParams = new URLSearchParams(params);
       navigate(
         {
-          pathname, // 현재 경로 유지
-          search: `?${newParams.toString()}`, // 쿼리만 변경
+          pathname,
+          search: `?${newParams.toString()}`,
         },
         { replace: true }
       );
