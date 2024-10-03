@@ -44,7 +44,6 @@ function copyGitignorePlugin(): Plugin {
       const destinationPath = path.resolve(__dirname, 'dist', '.gitignore');
 
       fs.copyFileSync(sourcePath, destinationPath);
-      console.log('.gitignore file copied to dist folder');
     },
   };
 }

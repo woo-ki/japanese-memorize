@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 type UpdateQueryParamType = {
@@ -9,9 +9,7 @@ type UpdateQueryParamType = {
 };
 
 const DictionaryPage = () => {
-  const [searchParams] = useSearchParams();
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [level, setLevel] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
   const [page, setPage] = useState<string>('');
@@ -41,15 +39,7 @@ const DictionaryPage = () => {
     setKeyword(param.keyword);
     setPage(param.page);
     setPart(param.part);
-
-    // 현재 경로에서 쿼리만 업데이트 (replace: true)
-    navigate(
-      {
-        pathname, // 현재 경로 유지
-        search: `?${newParams.toString()}`, // 쿼리만 변경
-      },
-      { replace: true }
-    );
+    setSearchParams(newParams, { replace: true });
   };
   useEffect(() => {
     const param = getParam(
