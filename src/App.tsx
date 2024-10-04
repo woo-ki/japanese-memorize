@@ -6,14 +6,20 @@ import { helperClass } from '@styles/helper.emotion.ts';
 import { globalEmotion } from '@styles/global.emotion.ts';
 import { Global } from '@emotion/react';
 import MainLayout from '@layouts/MainLayout';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function App() {
   const jlptStore = useAppStore('jlpt');
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
+    fetch('/s3/japanese-memorize/data/jlpt_word.json')
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      });
     const jlpt: JlptType = jlptData as JlptType;
     jlptStore.setJlpt(jlpt);
 
@@ -23,20 +29,6 @@ function App() {
     };
     handleResize();
     window.addEventListener('resize', handleResize);
-
-    const params = Object.fromEntries(searchParams.entries());
-    if (params.path) {
-      const pathname = decodeURIComponent(params.path);
-      delete params.path;
-      const newParams = new URLSearchParams(params);
-      navigate(
-        {
-          pathname,
-          search: `?${newParams.toString()}`,
-        },
-        { replace: true }
-      );
-    }
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);

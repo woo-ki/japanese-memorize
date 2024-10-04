@@ -1,9 +1,7 @@
-import { defineConfig, loadEnv, type Plugin } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
-import fs from 'fs';
-import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const envDir = `${process.cwd()}`;
@@ -18,11 +16,17 @@ export default defineConfig(({ mode }) => {
         jsxImportSource: '@emotion/react',
       }),
       tsconfigPaths(),
-      copyGitignorePlugin(),
     ],
     server: {
       port: Number(env.VITE_APP_PORT),
       host: env.VITE_APP_HOST,
+      proxy: {
+        '/s3': {
+          target: 'https://woo-ki.s3.ap-northeast-2.amazonaws.com',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/s3/, ''),
+        },
+      },
     },
     build: {
       minify: 'terser',
@@ -35,15 +39,3 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
-
-function copyGitignorePlugin(): Plugin {
-  return {
-    name: 'copy-gitignore',
-    closeBundle() {
-      const sourcePath = path.resolve(__dirname, '.gitignore');
-      const destinationPath = path.resolve(__dirname, 'dist', '.gitignore');
-
-      fs.copyFileSync(sourcePath, destinationPath);
-    },
-  };
-}
