@@ -1,5 +1,5 @@
 export const layouts = {
-  footerSize: '100px',
+  footerSize: '50px',
   headerSize: '60px',
 };
 

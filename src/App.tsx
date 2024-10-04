@@ -11,7 +11,9 @@ function App() {
   const jlptStore = useAppStore('jlpt');
 
   useEffect(() => {
-    fetch('/s3/japanese-memorize/data/jlpt_word.json')
+    fetch(
+      `${import.meta.env.PROD ? 'https://woo-ki.s3.ap-northeast-2.amazonaws.com' : '/s3'}/japanese-memorize/data/jlpt_word.json`
+    )
       .then((res) => {
         if (res.ok) {
           return res.json();

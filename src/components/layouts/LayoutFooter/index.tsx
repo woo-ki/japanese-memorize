@@ -31,9 +31,11 @@ const LayoutFooter = () => {
     <footer css={layoutFooterStyle}>
       <ins
         className="adsbygoogle"
-        style={{ display: 'inline-block', width: 320, height: 100 }}
+        style={{ display: 'block' }}
         data-ad-client="ca-pub-9287532724113794"
         data-ad-slot="6333744210"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
       ></ins>
     </footer>
   );
