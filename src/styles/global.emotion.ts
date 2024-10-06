@@ -5,6 +5,7 @@ export const globalEmotion = (theme: Theme) => css`
     font-family: Hangeuljaemin4, serif;
     margin: 0;
     padding: 0;
+    user-select: none;
     box-sizing: border-box;
     color: ${theme.colors.font};
   }
