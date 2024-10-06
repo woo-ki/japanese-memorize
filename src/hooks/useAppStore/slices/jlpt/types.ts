@@ -1,34 +1,21 @@
 export type JlptWordType = {
+  uuid: string;
   level: string;
-  entry_id: string;
   word: string;
   furigana: string;
   parts: string[];
   means: string[];
 };
 
-type JlptItemType = {
-  parts: string[];
-  words: JlptWordType[];
-};
-
-export type JlptType = {
-  N1: JlptItemType;
-  N2: JlptItemType;
-  N3: JlptItemType;
-  N4: JlptItemType;
-  N5: JlptItemType;
-};
-
 type JlptStatesType = {
-  jlpt: JlptType;
+  jlpt_list: JlptWordType[];
   show_words: JlptWordType[];
 };
 type JlptActionsType = {
   // eslint-disable-next-line no-unused-vars
-  setJlpt: (jlpt: JlptType) => void;
+  setJlptList: (jlpt_list: JlptWordType[]) => void;
   // eslint-disable-next-line no-unused-vars
-  setShowWords: (key: keyof JlptType, part: string) => void;
+  setShowWords: (show_words: JlptWordType[]) => void;
 };
 
 export type JlptStoreType = JlptStatesType & JlptActionsType;
