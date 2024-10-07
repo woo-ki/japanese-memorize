@@ -42,6 +42,41 @@ export const createObjectStore = (
           storeSchema.storeSchema.forEach((schema) => {
             objectStore.createIndex(schema.name, schema.keyPath, schema.options);
           });
+        } else {
+          const store = (event.target as IDBOpenDBRequest).transaction!.objectStore(storeSchema.store);
+          const tempData: unknown[] = [];
+
+          store.openCursor().onsuccess = async (event) => {
+            const cursor: IDBCursorWithValue | null = (event.target as IDBRequest).result;
+            if (cursor) {
+              tempData.push(cursor.value); // 기존 데이터를 배열에 저장
+              cursor.continue();
+            } else {
+              // Object Store 삭제
+              db.deleteObjectStore(storeSchema.store);
+
+              const newStore = db.createObjectStore(storeSchema.store, storeSchema.storeConfig);
+
+              storeSchema.storeSchema.forEach((schema) => {
+                newStore.createIndex(schema.name, schema.keyPath, schema.options);
+              });
+
+              // 기존 데이터를 새 Object Store에 복구
+              try {
+                await Promise.all(
+                  tempData.map((item) => {
+                    return new Promise((resolve, reject) => {
+                      const addRequest = newStore.add(item);
+                      addRequest.onsuccess = () => resolve(true);
+                      addRequest.onerror = () => reject(addRequest.error);
+                    });
+                  })
+                );
+              } catch (error) {
+                console.error('데이터 복구 중 오류 발생:', error);
+              }
+            }
+          };
         }
       });
     };

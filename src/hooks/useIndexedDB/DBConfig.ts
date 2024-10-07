@@ -33,7 +33,10 @@ export const DBConfig: DBConfigType = {
     {
       store: 'jlpt-word',
       storeConfig: { keyPath: 'uuid', autoIncrement: false },
-      storeSchema: [{ name: 'searchIndex', keyPath: ['level', 'furigana'], options: { unique: false } }],
+      storeSchema: [
+        { name: 'searchIndex', keyPath: ['level', 'furigana'], options: { unique: false } },
+        { name: 'levelIndex', keyPath: 'level', options: { unique: false } },
+      ],
     },
   ],
 };
