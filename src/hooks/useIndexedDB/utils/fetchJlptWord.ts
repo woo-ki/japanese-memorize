@@ -1,6 +1,7 @@
+export type JlptWordLevelType = 'N1' | 'N2' | 'N3' | 'N4' | 'N5';
 export type JlptWordTypeForFetch = {
   uuid: string;
-  level: string;
+  level: JlptWordLevelType;
   word: string;
   furigana: string;
   parts: string[];

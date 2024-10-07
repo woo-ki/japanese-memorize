@@ -1,28 +1,47 @@
 import { DBConfigType } from '@hooks/useIndexedDB/DBConfig.ts';
 import { createObjectStore } from '@hooks/useIndexedDB/utils/createObjectStore.ts';
 import { dbOperations } from '@hooks/useIndexedDB/utils/dbOperations.ts';
+import { useEffect, useMemo, useState } from 'react';
+import { openDB } from '@hooks/useIndexedDB/utils/openDB.ts';
 
 interface useIndexedDbConfig {
   name: string | null;
   version: number | null;
-  db: IDBDatabase | null;
 }
 const config: useIndexedDbConfig = {
   name: null,
   version: null,
-  db: null,
 };
+
+const dbRef: { current: IDBDatabase | null } = {
+  current: null,
+};
+
 export const useIndexedDB = () => {
-  if (config.version === null || config.name === null || config.db === null) {
+  if (config.version === null || config.name === null) {
     throw new Error('indexedDB를 먼저 initialize 해주세요');
   }
 
-  return dbOperations(config.db!);
+  const [isStoreLoading, setIsStoreLoading] = useState<boolean>(false);
+
+  const init = async () => {
+    if (!dbRef.current) {
+      dbRef.current = await openDB(config.name!, config.version!);
+    }
+  };
+
+  useEffect(() => {
+    init().then();
+  }, []);
+
+  return useMemo(() => dbOperations(dbRef, isStoreLoading, setIsStoreLoading), [isStoreLoading]);
 };
 
 export const initDB = async ({ name, version, objectStoresMeta }: DBConfigType): Promise<boolean> => {
+  if (Object.isFrozen(config)) return true;
   config.version = version;
   config.name = name;
-  config.db = await createObjectStore(name, version, objectStoresMeta);
-  return config.db !== null;
+  Object.freeze(config);
+  dbRef.current = await createObjectStore(name, version, objectStoresMeta);
+  return dbRef.current !== null;
 };

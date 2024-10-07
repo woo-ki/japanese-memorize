@@ -4,9 +4,11 @@ import { globalEmotion } from '@styles/global.emotion.ts';
 import { Global } from '@emotion/react';
 import MainLayout from '@layouts/MainLayout';
 import { useLoaderData } from 'react-router-dom';
+import { useIndexedDB } from '@hooks/useIndexedDB';
 
 function App() {
   const initSuccess = useLoaderData() as boolean;
+  const { closeDB } = useIndexedDB();
   useEffect(() => {
     const handleResize = () => {
       const vh = window.innerHeight * 0.01;
@@ -17,6 +19,7 @@ function App() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      closeDB();
     };
   }, []);
 

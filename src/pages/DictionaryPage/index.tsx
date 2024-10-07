@@ -1,30 +1,34 @@
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { useIndexedDB } from '@hooks/useIndexedDB';
+import { JlptWordLevelType } from '@hooks/useIndexedDB/utils/fetchJlptWord.ts';
+import { isValidLevel } from '@utils/type-guards.ts';
+import { commonFunctions } from '@utils/functions.ts';
 
 type UpdateQueryParamType = {
-  level: string;
+  level: JlptWordLevelType | '전체';
   keyword: string;
-  page: string;
+  nowPage: number;
   part: string;
 };
 
 const DictionaryPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [level, setLevel] = useState<string>('');
+  const [level, setLevel] = useState<JlptWordLevelType | '전체'>('전체');
   const [keyword, setKeyword] = useState<string>('');
-  const [page, setPage] = useState<string>('');
-  const [part, setPart] = useState<string>('');
+  const [nowPage, setNowPage] = useState<number>(1);
+  const [part, setPart] = useState<string>('전체');
+  const { isStoreLoading, searchWordList } = useIndexedDB();
 
-  const getParam = (
-    level: string | null,
-    keyword: string | null,
-    page: string | null,
-    part: string | null
-  ): UpdateQueryParamType => {
+  const getParam = (): UpdateQueryParamType => {
+    const level = searchParams.get('level');
+    const keyword = searchParams.get('keyword');
+    const nowPage = searchParams.get('nowPage');
+    const part = searchParams.get('part');
     return {
-      level: level || '전체',
+      level: isValidLevel(level) ? level : '전체',
       keyword: keyword || '',
-      page: page || '1',
+      nowPage: commonFunctions.isNumber(nowPage) ? Number(nowPage) : 1,
       part: part || '전체',
     };
   };
@@ -33,35 +37,51 @@ const DictionaryPage = () => {
     const newParams = new URLSearchParams();
     newParams.set('level', param.level);
     newParams.set('keyword', param.keyword);
-    newParams.set('page', param.page);
+    newParams.set('nowPage', param.nowPage + '');
     newParams.set('part', param.part);
     setLevel(param.level);
     setKeyword(param.keyword);
-    setPage(param.page);
+    setNowPage(param.nowPage);
     setPart(param.part);
     setSearchParams(newParams, { replace: true });
   };
+
   useEffect(() => {
-    const param = getParam(
-      searchParams.get('level'),
-      searchParams.get('keyword'),
-      searchParams.get('page'),
-      searchParams.get('part')
-    );
+    const param = getParam();
     updateQuery(param);
   }, []);
+  useEffect(() => {
+    searchWordList(level, '', part, nowPage, 10).then((res) => console.log(res));
+  }, [searchWordList, level, nowPage, part]);
 
-  const random = () => {
-    const param = getParam(null, Math.random() + '', null, null);
-    updateQuery(param);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (isValidLevel(e.target.value)) {
+      setLevel(e.target.value);
+    } else {
+      setLevel('전체');
+    }
   };
+
+  if (isStoreLoading) return <div style={{ height: 300, background: 'black' }}></div>;
   return (
     <div>
       사전페이지
-      <button onClick={random}>ㅎㅇ</button>
-      <div>level: {level}</div>
+      <div>
+        <input type="radio" name="level" value="전체" onChange={handleChange} />
+        전체
+        <input type="radio" name="level" value="N1" onChange={handleChange} />
+        N1
+        <input type="radio" name="level" value="N2" onChange={handleChange} />
+        N2
+        <input type="radio" name="level" value="N3" onChange={handleChange} />
+        N3
+        <input type="radio" name="level" value="N4" onChange={handleChange} />
+        N4
+        <input type="radio" name="level" value="N5" onChange={handleChange} />
+        N5
+      </div>
       <div>keyword: {keyword}</div>
-      <div>page: {page}</div>
+      <div>nowPage: {nowPage}</div>
       <div>part: {part}</div>
     </div>
   );
