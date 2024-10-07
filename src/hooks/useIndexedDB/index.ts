@@ -1,7 +1,7 @@
 import { DBConfigType } from '@hooks/useIndexedDB/DBConfig.ts';
 import { createObjectStore } from '@hooks/useIndexedDB/utils/createObjectStore.ts';
 import { dbOperations } from '@hooks/useIndexedDB/utils/dbOperations.ts';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { openDB } from '@hooks/useIndexedDB/utils/openDB.ts';
 
 interface useIndexedDbConfig {
@@ -34,7 +34,7 @@ export const useIndexedDB = () => {
     init().then();
   }, []);
 
-  return useMemo(() => dbOperations(dbRef, isStoreLoading, setIsStoreLoading), [isStoreLoading]);
+  return dbOperations(dbRef, isStoreLoading, setIsStoreLoading);
 };
 
 export const initDB = async ({ name, version, objectStoresMeta }: DBConfigType): Promise<boolean> => {

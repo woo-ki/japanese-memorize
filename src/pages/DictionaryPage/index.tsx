@@ -18,7 +18,7 @@ const DictionaryPage = () => {
   const [keyword, setKeyword] = useState<string>('');
   const [nowPage, setNowPage] = useState<number>(1);
   const [part, setPart] = useState<string>('전체');
-  const { isStoreLoading, searchWordList } = useIndexedDB();
+  const { searchWordList } = useIndexedDB();
 
   const getParam = (): UpdateQueryParamType => {
     const level = searchParams.get('level');
@@ -52,7 +52,7 @@ const DictionaryPage = () => {
   }, []);
   useEffect(() => {
     searchWordList(level, '', part, nowPage, 10).then((res) => console.log(res));
-  }, [searchWordList, level, nowPage, part]);
+  }, [level, nowPage, part]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (isValidLevel(e.target.value)) {
@@ -62,7 +62,6 @@ const DictionaryPage = () => {
     }
   };
 
-  if (isStoreLoading) return <div style={{ height: 300, background: 'black' }}></div>;
   return (
     <div>
       사전페이지
