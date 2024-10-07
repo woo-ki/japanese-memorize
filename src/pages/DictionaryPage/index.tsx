@@ -1,9 +1,10 @@
 import { useSearchParams } from 'react-router-dom';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIndexedDB } from '@hooks/useIndexedDB';
 import { JlptWordLevelType } from '@hooks/useIndexedDB/utils/fetchJlptWord.ts';
 import { isValidLevel } from '@utils/type-guards.ts';
 import { commonFunctions } from '@utils/functions.ts';
+import RadioButtonGroup from '@components/pages/dictionaryPage/RadioButtonGroup';
 
 type UpdateQueryParamType = {
   level: JlptWordLevelType | '전체';
@@ -13,6 +14,7 @@ type UpdateQueryParamType = {
 };
 
 const DictionaryPage = () => {
+  const levelListRef = useRef<(JlptWordLevelType | '전체')[]>(['전체', 'N1', 'N2', 'N3', 'N4', 'N5']);
   const [searchParams, setSearchParams] = useSearchParams();
   const [level, setLevel] = useState<JlptWordLevelType | '전체'>('전체');
   const [keyword, setKeyword] = useState<string>('');
@@ -54,31 +56,11 @@ const DictionaryPage = () => {
     searchWordList(level, '', part, nowPage, 10).then((res) => console.log(res));
   }, [level, nowPage, part]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (isValidLevel(e.target.value)) {
-      setLevel(e.target.value);
-    } else {
-      setLevel('전체');
-    }
-  };
-
   return (
     <div>
       사전페이지
-      <div>
-        <input type="radio" name="level" value="전체" onChange={handleChange} />
-        전체
-        <input type="radio" name="level" value="N1" onChange={handleChange} />
-        N1
-        <input type="radio" name="level" value="N2" onChange={handleChange} />
-        N2
-        <input type="radio" name="level" value="N3" onChange={handleChange} />
-        N3
-        <input type="radio" name="level" value="N4" onChange={handleChange} />
-        N4
-        <input type="radio" name="level" value="N5" onChange={handleChange} />
-        N5
-      </div>
+      <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={level} setter={setLevel} />
+      <RadioButtonGroup name="품사 필터" list={levelListRef.current} value={level} setter={setLevel} />
       <div>keyword: {keyword}</div>
       <div>nowPage: {nowPage}</div>
       <div>part: {part}</div>
