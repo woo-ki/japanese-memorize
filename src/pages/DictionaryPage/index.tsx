@@ -1,69 +1,74 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useIndexedDB } from '@hooks/useIndexedDB';
-import { JlptWordLevelType } from '@hooks/useIndexedDB/utils/fetchJlptWord.ts';
+import { JlptWordLevelType, JlptWordType } from '@hooks/useIndexedDB/utils/fetchJlptWord.ts';
 import { isValidLevel } from '@utils/type-guards.ts';
 import { commonFunctions } from '@utils/functions.ts';
 import RadioButtonGroup from '@components/pages/dictionaryPage/RadioButtonGroup';
-
-type UpdateQueryParamType = {
-  level: JlptWordLevelType | '전체';
-  keyword: string;
-  nowPage: number;
-  part: string;
-};
+import WordCard from '@components/pages/dictionaryPage/WordCard';
 
 const DictionaryPage = () => {
   const levelListRef = useRef<(JlptWordLevelType | '전체')[]>(['전체', 'N1', 'N2', 'N3', 'N4', 'N5']);
+  const [partList, setPartList] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [level, setLevel] = useState<JlptWordLevelType | '전체'>('전체');
   const [keyword, setKeyword] = useState<string>('');
   const [nowPage, setNowPage] = useState<number>(1);
   const [part, setPart] = useState<string>('전체');
-  const { searchWordList } = useIndexedDB();
+  const [wordList, setWordList] = useState<JlptWordType[]>([]);
+  const { getPartList, searchWordList } = useIndexedDB();
 
-  const getParam = (): UpdateQueryParamType => {
+  const initParam = () => {
     const level = searchParams.get('level');
     const keyword = searchParams.get('keyword');
     const nowPage = searchParams.get('nowPage');
     const part = searchParams.get('part');
-    return {
-      level: isValidLevel(level) ? level : '전체',
-      keyword: keyword || '',
-      nowPage: commonFunctions.isNumber(nowPage) ? Number(nowPage) : 1,
-      part: part || '전체',
-    };
+    setLevel(isValidLevel(level) ? level : '전체');
+    setKeyword(keyword || '');
+    setNowPage(commonFunctions.isNumber(nowPage) ? Number(nowPage) : 1);
+    setPart(part || '전체');
   };
-  const updateQuery = (param: UpdateQueryParamType) => {
+  const updateQuery = () => {
     // 새로운 쿼리 파라미터 생성
     const newParams = new URLSearchParams();
-    newParams.set('level', param.level);
-    newParams.set('keyword', param.keyword);
-    newParams.set('nowPage', param.nowPage + '');
-    newParams.set('part', param.part);
-    setLevel(param.level);
-    setKeyword(param.keyword);
-    setNowPage(param.nowPage);
-    setPart(param.part);
+    newParams.set('level', level);
+    newParams.set('keyword', keyword);
+    newParams.set('nowPage', nowPage + '');
+    newParams.set('part', part);
     setSearchParams(newParams, { replace: true });
   };
 
   useEffect(() => {
-    const param = getParam();
-    updateQuery(param);
+    initParam();
+    updateQuery();
   }, []);
   useEffect(() => {
-    searchWordList(level, '', part, nowPage, 10).then((res) => console.log(res));
-  }, [level, nowPage, part]);
+    getPartList(level).then((parts) => {
+      setPartList(() => {
+        setPart((prev) => {
+          return parts.includes(prev) ? prev : '전체';
+        });
+        return parts;
+      });
+    });
+  }, [level]);
+  useEffect(() => {
+    searchWordList(level, '', part, nowPage, 10).then((res) => {
+      updateQuery();
+      setWordList(res);
+    });
+  }, [nowPage, partList, part]);
 
   return (
     <div>
       사전페이지
       <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={level} setter={setLevel} />
-      <RadioButtonGroup name="품사 필터" list={levelListRef.current} value={level} setter={setLevel} />
-      <div>keyword: {keyword}</div>
-      <div>nowPage: {nowPage}</div>
-      <div>part: {part}</div>
+      {partList.length > 0 && <RadioButtonGroup name="품사 필터" list={partList} value={part} setter={setPart} />}
+      <div>
+        {wordList.map((word) => (
+          <WordCard key={word.uuid} word={word} />
+        ))}
+      </div>
     </div>
   );
 };

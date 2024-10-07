@@ -6,6 +6,24 @@ type setIsStoreLoadingType = Dispatch<SetStateAction<boolean>>;
 export const dbOperations = (dbRef: dbRefType, isStoreLoading: boolean, setIsStoreLoading: setIsStoreLoadingType) => {
   const store_name = 'jlpt-word';
 
+  const getPartList = async (level: '전체' | JlptWordLevelType): Promise<string[]> => {
+    const store = await waitForStore(dbRef, setIsStoreLoading, store_name, 'readonly');
+    return new Promise((resolve) => {
+      const partsSet: Set<string> = new Set();
+      // 모든 데이터를 가져올지 특정 level만 가져올지 결정
+      if (level === '전체') {
+        // 모든 데이터를 가져오기 위한 커서 사용
+        const cursorRequest: IDBRequest<IDBCursorWithValue | null> = store.openCursor();
+        handleGetPartListCursor(cursorRequest, resolve, partsSet);
+      } else {
+        // 특정 level에 해당하는 데이터만 가져오기
+        const index = store.index('levelIndex');
+        const cursorRequest = index.openCursor(level);
+        handleGetPartListCursor(cursorRequest, resolve, partsSet);
+      }
+    });
+  };
+
   const searchWordList = async (
     level: '전체' | JlptWordLevelType,
     keyword: string,
@@ -65,6 +83,7 @@ export const dbOperations = (dbRef: dbRefType, isStoreLoading: boolean, setIsSto
     isStoreLoading,
     searchWordList,
     closeDB,
+    getPartList,
   };
 };
 
@@ -113,3 +132,31 @@ function isSearchMatch(word: JlptWordType, level: string, part: string, keyword:
   const isKeywordMatch = keyword === '' || word.word.includes(keyword) || word.furigana.includes(keyword);
   return isLevelMatch && isPartMatch && isKeywordMatch;
 }
+
+// 결과 처리 함수
+const handleGetPartListCursor = (
+  cursorRequest: IDBRequest<IDBCursorWithValue | null>,
+  // eslint-disable-next-line no-unused-vars
+  resolve: (value: string[]) => void,
+  partsSet: Set<string>
+) => {
+  cursorRequest.onsuccess = (event) => {
+    const cursor: IDBCursorWithValue | null = (event.target as IDBRequest).result;
+    if (cursor) {
+      const parts: string[] = cursor.value.parts || [];
+      for (let i = 0; i < parts.length; i++) {
+        partsSet.add(parts[i]);
+      }
+      cursor.continue();
+    } else {
+      const partsArray: string[] = Array.from(partsSet);
+
+      // 내림차순 정렬
+      partsArray.sort((a, b) => b.localeCompare(a));
+
+      // 맨 앞에 '전체' 추가
+      partsArray.unshift('전체');
+      resolve(partsArray);
+    }
+  };
+};
