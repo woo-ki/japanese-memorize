@@ -10,6 +10,7 @@ export const moveIconStyle = (theme: Theme) => css`
     border: 1px solid ${theme.colors.border};
     background: ${theme.colors.second};
     border-radius: 16px;
+    box-shadow: 0 4px 8px ${theme.colors.shadow};
     position: relative;
 
     > .move-icon-wrapper {

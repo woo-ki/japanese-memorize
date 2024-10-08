@@ -1,12 +1,18 @@
 export const colors = {
-  font: '#3C3C43',
-  background: '#ffc497',
+  font: '#333333',
+  secondFont: '#4f4f4f',
+  pointFont: '#023047',
+  supportFont: '#666666',
+  background: '#f7f3e9',
   white: '#FFFFFF',
-  second: '#fae5cf',
-  button: '#9bbfe0',
+  second: '#f0f0f0',
+  third: '#ffe8e0',
+  button: '#219ebc',
   overlay: 'rgba(52, 52, 52, 0.2)',
-  point: '#314f6c',
+  point: '#023047',
   border: '#929292',
+  shadow: 'rgba(0, 0, 0, 0.1)',
+
   t3: '#f6c380',
   t6: '#ff8780',
 };

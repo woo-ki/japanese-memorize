@@ -8,8 +8,10 @@ import RadioButtonGroup from '@components/pages/dictionaryPage/RadioButtonGroup'
 import WordCard from '@components/pages/dictionaryPage/WordCard';
 import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
 import SearchBar from '@components/pages/common/SearchBar';
+import { dictionaryPageStyle } from '@pages/DictionaryPage/style.ts';
 
 const DictionaryPage = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const levelListRef = useRef<(JlptWordLevelType | '전체')[]>(['전체', 'N1', 'N2', 'N3', 'N4', 'N5']);
   const partListRef = useRef<string[]>([
     '전체',
@@ -73,6 +75,7 @@ const DictionaryPage = () => {
     searchWordList(wordSearchParams).then((res) => {
       updateQuery();
       setWordList(res);
+      containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }, [wordSearchParams]);
 
@@ -84,17 +87,24 @@ const DictionaryPage = () => {
   };
 
   return (
-    <div>
-      <SearchBar
-        smallSize={true}
-        initValue={searchParams.get('keyword') || ''}
-        setWordSearchParams={setWordSearchParams}
-      />
-      <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={wordSearchParams.level} setter={setLevel} />
-      <RadioButtonGroup name="품사 필터" list={partListRef.current} value={wordSearchParams.part} setter={setPart} />
-      <div>
+    <div ref={containerRef} css={dictionaryPageStyle}>
+      <div id="search_container">
+        <SearchBar
+          smallSize={true}
+          initValue={searchParams.get('keyword') || ''}
+          setWordSearchParams={setWordSearchParams}
+        />
+        <RadioButtonGroup
+          name="레벨 필터"
+          list={levelListRef.current}
+          value={wordSearchParams.level}
+          setter={setLevel}
+        />
+        <RadioButtonGroup name="품사 필터" list={partListRef.current} value={wordSearchParams.part} setter={setPart} />
+      </div>
+      <div id="word_list_container">
         {wordList.map((word) => (
-          <WordCard key={word.uuid} word={word} />
+          <WordCard key={word.uuid} wordData={word} />
         ))}
       </div>
     </div>

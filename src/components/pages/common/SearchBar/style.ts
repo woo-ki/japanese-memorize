@@ -4,6 +4,8 @@ export const searchBarStyle = (theme: Theme) => css`
   display: flex;
   width: 100%;
   height: 45px;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px ${theme.colors.shadow};
 
   > #search_input {
     background: ${theme.colors.second};
@@ -27,6 +29,8 @@ export const searchBarStyle = (theme: Theme) => css`
 
   &.small {
     height: 32px;
+    border-radius: 8px;
+
     > #search_input {
       border-radius: 8px 0 0 8px;
       font-size: 16px;
