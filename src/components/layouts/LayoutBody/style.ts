@@ -12,4 +12,8 @@ export const layoutBodyStyle = (theme: Theme) => css`
     height: calc(100% - ${theme.layouts.footerSize});
     border-top: none;
   }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;

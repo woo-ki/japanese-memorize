@@ -1,7 +1,7 @@
-import { type JlptStoreType, useJlptStore } from '@hooks/useAppStore/slices/jlpt';
+import { type StoreType as CommonStoreType, useCommonStore } from '@hooks/useAppStore/slices/common';
 
 type AppStoreType = {
-  jlpt: JlptStoreType;
+  common: CommonStoreType;
 };
 
 export type StoreKeyType = keyof AppStoreType;
@@ -11,7 +11,7 @@ export function useAppStore(): AppStoreType;
 export function useAppStore<K extends StoreKeyType>(storeKey: K): AppStoreType[K];
 export function useAppStore<K extends StoreKeyType>(storeKey?: K): AppStoreType | AppStoreType[K] {
   const stores: AppStoreType = {
-    jlpt: useJlptStore(),
+    common: useCommonStore(),
   };
   if (storeKey) {
     return stores[storeKey];

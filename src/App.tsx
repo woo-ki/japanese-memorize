@@ -5,10 +5,11 @@ import { Global } from '@emotion/react';
 import MainLayout from '@layouts/MainLayout';
 import { useLoaderData } from 'react-router-dom';
 import { useIndexedDB } from '@hooks/useIndexedDB';
+import GlobalLoadingScreen from '@components/commons/GlobalLoadingScreen';
 
 function App() {
   const initSuccess = useLoaderData() as boolean;
-  const { closeDB } = useIndexedDB();
+  const { isDataLoading, closeDB } = useIndexedDB();
   useEffect(() => {
     const handleResize = () => {
       const vh = window.innerHeight * 0.01;
@@ -29,6 +30,7 @@ function App() {
       <Global styles={helperClass} />
       <Global styles={globalEmotion} />
       <MainLayout />
+      {isDataLoading && <GlobalLoadingScreen />}
     </>
   );
 }

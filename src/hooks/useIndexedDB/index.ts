@@ -1,8 +1,9 @@
 import { DBConfigType } from '@hooks/useIndexedDB/DBConfig.ts';
 import { createObjectStore } from '@hooks/useIndexedDB/utils/createObjectStore.ts';
 import { dbOperations } from '@hooks/useIndexedDB/utils/dbOperations.ts';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { openDB } from '@hooks/useIndexedDB/utils/openDB.ts';
+import { useAppStore } from '@hooks/useAppStore';
 
 interface useIndexedDbConfig {
   name: string | null;
@@ -22,7 +23,7 @@ export const useIndexedDB = () => {
     throw new Error('indexedDB를 먼저 initialize 해주세요');
   }
 
-  const [isDataLoading, setIsDataLoading] = useState<boolean>(false);
+  const { isDataLoading, setIsDataLoading } = useAppStore('common');
 
   const init = async () => {
     if (!dbRef.current) {

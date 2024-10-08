@@ -33,7 +33,7 @@ const DictionaryPage = () => {
     pageSize: 10,
   });
   const [wordList, setWordList] = useState<JlptWordType[]>([]);
-  const { isDataLoading, searchWordList } = useIndexedDB();
+  const { searchWordList } = useIndexedDB();
 
   const initParam = () => {
     const level = searchParams.get('level');
@@ -88,7 +88,6 @@ const DictionaryPage = () => {
       <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={wordSearchParams.level} setter={setLevel} />
       <RadioButtonGroup name="품사 필터" list={partListRef.current} value={wordSearchParams.part} setter={setPart} />
       <div>
-        {isDataLoading && <div style={{ background: 'black' }}>로딩중...</div>}
         {wordList.map((word) => (
           <WordCard key={word.uuid} word={word} />
         ))}
