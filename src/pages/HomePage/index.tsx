@@ -1,5 +1,5 @@
 import { homePageStyle } from '@pages/HomePage/style.ts';
-import SearchBar from '@components/pages/homePage/SearchBar';
+import SearchBar from 'src/components/pages/common/SearchBar';
 import MoveIcon from '@components/pages/homePage/MoveIcon';
 import dictionaryIcon from '@assets/icons/dictionary_icon.png';
 import memorizeIcon from '@assets/icons/memorize_icon.png';

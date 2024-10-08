@@ -1,4 +1,4 @@
-import { globalLoadingScreenStyle } from '@components/commons/GlobalLoadingScreen/style.ts';
+import { globalLoadingScreenStyle } from '@components/globals/GlobalLoadingScreen/style.ts';
 
 const GlobalLoadingScreen = () => {
   return (

@@ -7,6 +7,7 @@ import { commonFunctions } from '@utils/functions.ts';
 import RadioButtonGroup from '@components/pages/dictionaryPage/RadioButtonGroup';
 import WordCard from '@components/pages/dictionaryPage/WordCard';
 import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
+import SearchBar from '@components/pages/common/SearchBar';
 
 const DictionaryPage = () => {
   const levelListRef = useRef<(JlptWordLevelType | '전체')[]>(['전체', 'N1', 'N2', 'N3', 'N4', 'N5']);
@@ -84,7 +85,11 @@ const DictionaryPage = () => {
 
   return (
     <div>
-      사전페이지
+      <SearchBar
+        smallSize={true}
+        initValue={searchParams.get('keyword') || ''}
+        setWordSearchParams={setWordSearchParams}
+      />
       <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={wordSearchParams.level} setter={setLevel} />
       <RadioButtonGroup name="품사 필터" list={partListRef.current} value={wordSearchParams.part} setter={setPart} />
       <div>

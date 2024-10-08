@@ -16,7 +16,6 @@ export const searchBarStyle = (theme: Theme) => css`
   }
 
   > #search_button {
-    background: transparent;
     outline: none;
     flex-shrink: 0;
     padding: 8px 10px 8px 6px;
@@ -24,5 +23,23 @@ export const searchBarStyle = (theme: Theme) => css`
     border-radius: 0 50px 50px 0;
     border: 1px solid ${theme.colors.border};
     border-left: none;
+  }
+
+  &.small {
+    height: 32px;
+    > #search_input {
+      border-radius: 8px 0 0 8px;
+      font-size: 16px;
+    }
+
+    > #search_button {
+      border-radius: 0 8px 8px 0;
+      padding: 8px;
+
+      > svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
   }
 `;

@@ -5,7 +5,7 @@ import { Global } from '@emotion/react';
 import MainLayout from '@layouts/MainLayout';
 import { useLoaderData } from 'react-router-dom';
 import { useIndexedDB } from '@hooks/useIndexedDB';
-import GlobalLoadingScreen from '@components/commons/GlobalLoadingScreen';
+import GlobalLoadingScreen from '@components/globals/GlobalLoadingScreen';
 
 function App() {
   const initSuccess = useLoaderData() as boolean;
