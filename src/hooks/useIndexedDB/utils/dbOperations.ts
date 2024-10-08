@@ -7,6 +7,36 @@ type setIsDataLoadingType = (isDataLoading: boolean) => void;
 export const dbOperations = (dbRef: dbRefType, isDataLoading: boolean, setIsDataLoading: setIsDataLoadingType) => {
   const store_name = 'jlpt-word';
 
+  const getTotalPage = async ({ level, keyword, part, pageSize }: WordSearchParamsType): Promise<number> => {
+    const { store, timeout } = await waitForStore(dbRef, setIsDataLoading, store_name, 'readonly');
+    return new Promise((resolve, reject) => {
+      const index = store.index('searchIndex');
+      const request: IDBRequest<IDBCursorWithValue | null> = index.openCursor();
+
+      let totalCount = 0;
+      request.onsuccess = (event) => {
+        const cursor: IDBCursorWithValue | null = (event.target as IDBRequest).result;
+        if (cursor) {
+          const word: JlptWordType = cursor.value;
+          if (isSearchMatch(word, level, part, keyword)) {
+            totalCount++;
+          }
+          cursor.continue();
+        } else {
+          clearTimeout(timeout);
+          setIsDataLoading(false);
+          resolve(Math.ceil(totalCount / pageSize));
+        }
+      };
+
+      request.onerror = () => {
+        clearTimeout(timeout);
+        setIsDataLoading(false);
+        reject(request.error);
+      };
+    });
+  };
+
   const searchWordList = async ({
     level,
     keyword,
@@ -69,6 +99,7 @@ export const dbOperations = (dbRef: dbRefType, isDataLoading: boolean, setIsData
 
   return {
     isDataLoading,
+    getTotalPage,
     searchWordList,
     closeDB,
   };

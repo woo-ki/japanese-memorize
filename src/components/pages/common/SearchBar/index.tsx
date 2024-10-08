@@ -1,17 +1,17 @@
 import SearchIcon from '@assets/icons/search_icon.svg';
-import { ChangeEvent, Dispatch, FC, KeyboardEvent, SetStateAction, useCallback, useState } from 'react';
+import { ChangeEvent, Dispatch, FC, KeyboardEvent, SetStateAction, useEffect, useState } from 'react';
 import { searchBarStyle } from '@components/pages/common/SearchBar/style.ts';
 import { useNavigate } from 'react-router-dom';
 import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
 
 type SearchBarProps = {
-  initValue?: string;
+  keyword?: string;
   smallSize?: boolean;
   setWordSearchParams?: Dispatch<SetStateAction<WordSearchParamsType>>;
 };
-const SearchBar: FC<SearchBarProps> = ({ initValue, smallSize, setWordSearchParams }) => {
+const SearchBar: FC<SearchBarProps> = ({ keyword, smallSize, setWordSearchParams }) => {
   const navigate = useNavigate();
-  const [searchKeyword, setSearchKeyword] = useState<string>(initValue || '');
+  const [searchKeyword, setSearchKeyword] = useState<string>(keyword || '');
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
@@ -20,7 +20,7 @@ const SearchBar: FC<SearchBarProps> = ({ initValue, smallSize, setWordSearchPara
       handleClick();
     }
   };
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     if (setWordSearchParams) {
       setWordSearchParams((prev) => ({ ...prev, keyword: searchKeyword, nowPage: 1 }));
     } else {
@@ -30,7 +30,11 @@ const SearchBar: FC<SearchBarProps> = ({ initValue, smallSize, setWordSearchPara
         search: `?keyword=${searchKeyword}`, // 쿼리만 변경
       });
     }
-  }, [searchKeyword, navigate]);
+  };
+
+  useEffect(() => {
+    setSearchKeyword(keyword || '');
+  }, [keyword]);
 
   return (
     <section id="search_bar_container" className={`${smallSize && 'small'}`} css={searchBarStyle}>

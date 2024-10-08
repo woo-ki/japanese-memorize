@@ -16,7 +16,7 @@ export const wordCardStyle = (theme: Theme) => css`
 
     > .word-text-wrapper {
       font-size: 20px;
-      color: ${theme.colors.pointFont};
+      color: ${theme.colors.point};
 
       > .furigana-text {
         font-size: 0.7em;
