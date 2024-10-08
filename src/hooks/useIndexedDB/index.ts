@@ -22,7 +22,7 @@ export const useIndexedDB = () => {
     throw new Error('indexedDB를 먼저 initialize 해주세요');
   }
 
-  const [isStoreLoading, setIsStoreLoading] = useState<boolean>(false);
+  const [isDataLoading, setIsDataLoading] = useState<boolean>(false);
 
   const init = async () => {
     if (!dbRef.current) {
@@ -34,7 +34,7 @@ export const useIndexedDB = () => {
     init().then();
   }, []);
 
-  return dbOperations(dbRef, isStoreLoading, setIsStoreLoading);
+  return dbOperations(dbRef, isDataLoading, setIsDataLoading);
 };
 
 export const initDB = async ({ name, version, objectStoresMeta }: DBConfigType): Promise<boolean> => {

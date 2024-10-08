@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction } from 'react';
 import { radioButtonGroupStyle } from '@components/pages/dictionaryPage/RadioButtonGroup/style.ts';
 
 type RadioButtonGroupPropsType<T> = {
   name: string;
   list: T[];
   value: T;
-  setter: Dispatch<SetStateAction<T>>;
+  // eslint-disable-next-line no-unused-vars
+  setter: (data: T) => void;
 };
 const RadioButtonGroup = <T extends string>({ name, list, value, setter }: RadioButtonGroupPropsType<T>) => {
   const handleClick = (data: T) => {

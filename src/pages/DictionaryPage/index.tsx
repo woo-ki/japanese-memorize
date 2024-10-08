@@ -6,65 +6,89 @@ import { isValidLevel } from '@utils/type-guards.ts';
 import { commonFunctions } from '@utils/functions.ts';
 import RadioButtonGroup from '@components/pages/dictionaryPage/RadioButtonGroup';
 import WordCard from '@components/pages/dictionaryPage/WordCard';
+import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
 
 const DictionaryPage = () => {
   const levelListRef = useRef<(JlptWordLevelType | '전체')[]>(['전체', 'N1', 'N2', 'N3', 'N4', 'N5']);
-  const [partList, setPartList] = useState<string[]>([]);
+  const partListRef = useRef<string[]>([
+    '전체',
+    '형용사',
+    '형용동사',
+    '조사',
+    '접사',
+    '부사',
+    '명사',
+    '동사',
+    '대명사',
+    '기타',
+    '관용어',
+    '감동사',
+  ]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [level, setLevel] = useState<JlptWordLevelType | '전체'>('전체');
-  const [keyword, setKeyword] = useState<string>('');
-  const [nowPage, setNowPage] = useState<number>(1);
-  const [part, setPart] = useState<string>('전체');
+  const [wordSearchParams, setWordSearchParams] = useState<WordSearchParamsType>({
+    level: '전체',
+    keyword: '',
+    part: '',
+    nowPage: 1,
+    pageSize: 10,
+  });
   const [wordList, setWordList] = useState<JlptWordType[]>([]);
-  const { getPartList, searchWordList } = useIndexedDB();
+  const { isDataLoading, searchWordList } = useIndexedDB();
 
   const initParam = () => {
     const level = searchParams.get('level');
     const keyword = searchParams.get('keyword');
     const nowPage = searchParams.get('nowPage');
     const part = searchParams.get('part');
-    setLevel(isValidLevel(level) ? level : '전체');
-    setKeyword(keyword || '');
-    setNowPage(commonFunctions.isNumber(nowPage) ? Number(nowPage) : 1);
-    setPart(part || '전체');
+    const tempLevel = isValidLevel(level) ? level : '전체';
+    const tempKeyword = keyword || '';
+    const tempNowPage = commonFunctions.isNumber(nowPage) ? Number(nowPage) : 1;
+    const tempPart = part || '전체';
+    setWordSearchParams((prev) => ({
+      ...prev,
+      level: tempLevel,
+      keyword: tempKeyword,
+      nowPage: tempNowPage,
+      part: tempPart,
+    }));
   };
+
   const updateQuery = () => {
     // 새로운 쿼리 파라미터 생성
     const newParams = new URLSearchParams();
-    newParams.set('level', level);
-    newParams.set('keyword', keyword);
-    newParams.set('nowPage', nowPage + '');
-    newParams.set('part', part);
+    newParams.set('level', wordSearchParams.level);
+    newParams.set('keyword', wordSearchParams.keyword);
+    newParams.set('nowPage', wordSearchParams.nowPage + '');
+    newParams.set('part', wordSearchParams.part);
     setSearchParams(newParams, { replace: true });
   };
 
   useEffect(() => {
     initParam();
-    updateQuery();
   }, []);
+
   useEffect(() => {
-    getPartList(level).then((parts) => {
-      setPartList(() => {
-        setPart((prev) => {
-          return parts.includes(prev) ? prev : '전체';
-        });
-        return parts;
-      });
-    });
-  }, [level]);
-  useEffect(() => {
-    searchWordList(level, '', part, nowPage, 10).then((res) => {
+    if (wordSearchParams.part === '') return;
+    searchWordList(wordSearchParams).then((res) => {
       updateQuery();
       setWordList(res);
     });
-  }, [nowPage, partList, part]);
+  }, [wordSearchParams]);
+
+  const setLevel = (level: JlptWordLevelType | '전체') => {
+    setWordSearchParams((prev) => ({ ...prev, level }));
+  };
+  const setPart = (part: string) => {
+    setWordSearchParams((prev) => ({ ...prev, part }));
+  };
 
   return (
     <div>
       사전페이지
-      <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={level} setter={setLevel} />
-      {partList.length > 0 && <RadioButtonGroup name="품사 필터" list={partList} value={part} setter={setPart} />}
+      <RadioButtonGroup name="레벨 필터" list={levelListRef.current} value={wordSearchParams.level} setter={setLevel} />
+      <RadioButtonGroup name="품사 필터" list={partListRef.current} value={wordSearchParams.part} setter={setPart} />
       <div>
+        {isDataLoading && <div style={{ background: 'black' }}>로딩중...</div>}
         {wordList.map((word) => (
           <WordCard key={word.uuid} word={word} />
         ))}
