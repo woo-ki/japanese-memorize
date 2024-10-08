@@ -3,7 +3,7 @@ import { css, Theme } from '@emotion/react';
 export const radioButtonGroupStyle = (theme: Theme) => css`
   ${theme.utils.getFlex('column')}
   padding: 8px;
-  border: 1px solid ${theme.colors.black};
+  border: 1px solid ${theme.colors.border};
   background: ${theme.colors.second};
   border-radius: 8px;
   gap: 8px;
@@ -20,7 +20,7 @@ export const radioButtonGroupStyle = (theme: Theme) => css`
         width: 16px;
         height: 16px;
         background: ${theme.colors.white};
-        border: 1px solid ${theme.colors.black};
+        border: 1px solid ${theme.colors.border};
         border-radius: 100px;
         position: relative;
 

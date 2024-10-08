@@ -7,7 +7,7 @@ export const moveIconStyle = (theme: Theme) => css`
   > .move-icon-height-wrapper {
     width: 100%;
     padding-bottom: 100%;
-    border: 2px solid ${theme.colors.black};
+    border: 1px solid ${theme.colors.border};
     background: ${theme.colors.second};
     border-radius: 16px;
     position: relative;
