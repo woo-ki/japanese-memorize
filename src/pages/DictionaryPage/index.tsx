@@ -41,7 +41,7 @@ const DictionaryPage = () => {
   const [wordList, setWordList] = useState<JlptWordType[]>([]);
   const moveDirectionRef = useRef<'top' | 'bottom' | null>(null);
   const [totalPage, setTotalPage] = useState(0);
-  const { searchWordList, getTotalPage } = useIndexedDB();
+  const { searchWordList, getTotalPage, isDataLoading, db } = useIndexedDB();
 
   const initParam = () => {
     const level = searchParams.get('level');
@@ -133,11 +133,14 @@ const DictionaryPage = () => {
         <RadioButtonGroup name="품사 필터" list={partListRef.current} value={wordSearchParams.part} setter={setPart} />
       </div>
       <div id="word_list_container">
-        {dataFetchComplete && wordList.length > 0 ? (
-          wordList.map((word) => <WordCard key={word.uuid} wordData={word} />)
-        ) : (
-          <EmptyData setWordSearchParams={setWordSearchParams} />
-        )}
+        {db &&
+          !isDataLoading &&
+          dataFetchComplete &&
+          (wordList.length === 0 ? (
+            <EmptyData setWordSearchParams={setWordSearchParams} />
+          ) : (
+            wordList.length > 0 && wordList.map((word) => <WordCard key={word.uuid} wordData={word} />)
+          ))}
       </div>
       {totalPage > 0 && wordList.length > 0 && (
         <Pagination nowPage={wordSearchParams.nowPage} totalPage={totalPage} setPage={setPage} />

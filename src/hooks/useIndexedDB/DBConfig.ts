@@ -23,7 +23,9 @@ export type DBConfigType = {
 
 export const DBConfig: DBConfigType = {
   name: 'japanese-memorize',
+  // 수정사항 생긴다면 무조건 버전을 올려야 함
   version: 1,
+  // storeSchema는 수정할 수 있지만 storeConfig와 store는 수정할 수 없음.
   objectStoresMeta: [
     {
       store: 'last-modified',

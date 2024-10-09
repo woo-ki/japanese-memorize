@@ -21,7 +21,7 @@ const CustomAlert = () => {
           e.stopPropagation(); // 클릭 이벤트 전파 막기
         }}
       >
-        <div className="dialog-icon">⚠️</div>
+        <div className="dialog-icon">{alertProps.type === 'caution' ? '⚠️' : 'ℹ️'}</div>
         <div className="dialog-title">{alertProps.title}</div>
         <div className="dialog-message">{alertProps.message}</div>
         <div className="dialog-buttons">

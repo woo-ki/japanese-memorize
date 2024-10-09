@@ -1,7 +1,8 @@
 import type { SliceCreator } from '@hooks/useAppStore/utils/getCreate.ts';
-import { StoreType } from './types.ts';
+import { AlertPropsType, StoreType } from './types.ts';
 
-const defaultAlertProps = {
+const defaultAlertProps: AlertPropsType = {
+  type: 'info',
   title: '',
   message: '',
   confirmButton: '',

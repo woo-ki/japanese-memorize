@@ -34,7 +34,7 @@ function App() {
       <Global styles={globalEmotion} />
       <MainLayout />
       {showAlert && <CustomAlert />}
-      {isDataLoading && <GlobalLoadingScreen />}
+      {!showAlert && isDataLoading && <GlobalLoadingScreen />}
     </>
   );
 }

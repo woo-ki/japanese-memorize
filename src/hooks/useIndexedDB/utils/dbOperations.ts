@@ -1,9 +1,8 @@
 import { JlptWordType } from '@hooks/useIndexedDB/utils/fetchJlptWord.ts';
 import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
+import { setIsDataLoadingType } from '@hooks/useAppStore/slices/common';
 
 type dbRefType = { current: IDBDatabase | null };
-// eslint-disable-next-line no-unused-vars
-type setIsDataLoadingType = (isDataLoading: boolean) => void;
 export const dbOperations = (dbRef: dbRefType, isDataLoading: boolean, setIsDataLoading: setIsDataLoadingType) => {
   const store_name = 'jlpt-word';
 
@@ -102,6 +101,7 @@ export const dbOperations = (dbRef: dbRefType, isDataLoading: boolean, setIsData
     getTotalPage,
     searchWordList,
     closeDB,
+    db: dbRef.current,
   };
 };
 
