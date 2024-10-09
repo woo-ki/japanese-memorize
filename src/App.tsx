@@ -6,10 +6,13 @@ import MainLayout from '@layouts/MainLayout';
 import { useLoaderData } from 'react-router-dom';
 import { useIndexedDB } from '@hooks/useIndexedDB';
 import GlobalLoadingScreen from '@components/globals/GlobalLoadingScreen';
+import CustomAlert from '@components/globals/CustomAlert';
+import { useAppStore } from '@hooks/useAppStore';
 
 function App() {
   const initSuccess = useLoaderData() as boolean;
   const { isDataLoading, closeDB } = useIndexedDB();
+  const { showAlert } = useAppStore('common');
   useEffect(() => {
     const handleResize = () => {
       const vh = window.innerHeight * 0.01;
@@ -30,6 +33,7 @@ function App() {
       <Global styles={helperClass} />
       <Global styles={globalEmotion} />
       <MainLayout />
+      {showAlert && <CustomAlert />}
       {isDataLoading && <GlobalLoadingScreen />}
     </>
   );
