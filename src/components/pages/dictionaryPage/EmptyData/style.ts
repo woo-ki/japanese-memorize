@@ -4,10 +4,10 @@ export const emptyDataStyle = (theme: Theme) => css`
   ${theme.utils.getFlexCenter('column')}
 
   > svg {
-    width: 50%;
+    width: 40%;
   }
   > p {
-    font-size: 20px;
+    font-size: ${theme.sizes.header};
     color: ${theme.colors.supportFont};
   }
   > button {

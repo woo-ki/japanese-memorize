@@ -20,16 +20,16 @@ export const customAlertStyle = (theme: Theme) => css`
     text-align: center;
 
     .dialog-icon {
-      font-size: 40px;
+      font-size: ${theme.sizes.title};
       color: ${theme.colors.point};
       margin-bottom: 10px;
     }
     .dialog-title {
-      font-size: 18px;
+      font-size: ${theme.sizes.header};
       margin-bottom: 10px;
     }
     .dialog-message {
-      font-size: 14px;
+      font-size: ${theme.sizes.contents};
       color: ${theme.colors.secondFont};
       margin-bottom: 20px;
       white-space: pre-wrap;
@@ -45,7 +45,7 @@ export const customAlertStyle = (theme: Theme) => css`
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: ${theme.sizes.contents};
         flex: 1;
 
         &.cancel-button {

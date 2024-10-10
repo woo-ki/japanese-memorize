@@ -3,14 +3,12 @@ import { helperClass } from '@styles/helper.emotion.ts';
 import { globalEmotion } from '@styles/global.emotion.ts';
 import { Global } from '@emotion/react';
 import MainLayout from '@layouts/MainLayout';
-import { useLoaderData } from 'react-router-dom';
 import { useIndexedDB } from '@hooks/useIndexedDB';
 import GlobalLoadingScreen from '@components/globals/GlobalLoadingScreen';
 import CustomAlert from '@components/globals/CustomAlert';
 import { useAppStore } from '@hooks/useAppStore';
 
 function App() {
-  const initSuccess = useLoaderData() as boolean;
   const { isDataLoading, closeDB } = useIndexedDB();
   const { showAlert } = useAppStore('common');
   useEffect(() => {
@@ -27,7 +25,6 @@ function App() {
     };
   }, []);
 
-  if (!initSuccess) return <div>데이터 최적화 불가 페이지를 다시 로드 해 주세요</div>;
   return (
     <>
       <Global styles={helperClass} />

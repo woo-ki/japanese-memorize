@@ -15,7 +15,7 @@ export const wordCardStyle = (theme: Theme) => css`
     gap: 20px;
 
     > .word-text-wrapper {
-      font-size: 20px;
+      font-size: ${theme.sizes.header};
       color: ${theme.colors.point};
 
       > .furigana-text {
@@ -25,7 +25,7 @@ export const wordCardStyle = (theme: Theme) => css`
     }
 
     > .level-info {
-      font-size: 16px;
+      font-size: ${theme.sizes.contents};
       background-color: ${theme.colors.point};
       color: ${theme.colors.white};
       padding: 4px 8px;
@@ -34,16 +34,9 @@ export const wordCardStyle = (theme: Theme) => css`
   }
   > .word-card-means-wrapper {
     margin-top: 12px;
-    font-size: 1em;
+    font-size: ${theme.sizes.contents};
     ${theme.utils.getFlex('column')}
     gap: 4px;
     color: ${theme.colors.secondFont};
-  }
-  > .word-card-footer-wrapper {
-    margin-top: 12px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.9em;
-    color: #888;
   }
 `;

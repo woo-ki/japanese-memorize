@@ -22,11 +22,11 @@ export const moveIconStyle = (theme: Theme) => css`
       gap: 8px;
 
       > img {
-        width: 50%;
+        width: 40%;
         height: auto;
       }
       > h3 {
-        font-size: 20px;
+        font-size: ${theme.sizes.header};
       }
     }
   }

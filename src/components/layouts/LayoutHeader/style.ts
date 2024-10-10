@@ -16,7 +16,7 @@ export const layoutHeaderStyle = (theme: Theme) => css`
       height: calc(${theme.layouts.headerSize} - 16px);
     }
     > #logo_text {
-      font-size: 26px;
+      font-size: ${theme.sizes.subTitle};
     }
   }
 `;

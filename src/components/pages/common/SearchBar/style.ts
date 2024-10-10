@@ -3,7 +3,7 @@ import { css, Theme } from '@emotion/react';
 export const searchBarStyle = (theme: Theme) => css`
   display: flex;
   width: 100%;
-  height: 45px;
+  height: 42px;
   border-radius: 50px;
   box-shadow: 0 4px 8px ${theme.colors.shadow};
 
@@ -14,7 +14,7 @@ export const searchBarStyle = (theme: Theme) => css`
     border: 1px solid ${theme.colors.border};
     border-radius: 50px 0 0 50px;
     padding: 8px 8px 8px 16px;
-    font-size: 20px;
+    font-size: ${theme.sizes.header};
   }
 
   > #search_button {
@@ -33,7 +33,7 @@ export const searchBarStyle = (theme: Theme) => css`
 
     > #search_input {
       border-radius: 8px 0 0 8px;
-      font-size: 16px;
+      font-size: ${theme.sizes.contents};
     }
 
     > #search_button {

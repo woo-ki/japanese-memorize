@@ -12,7 +12,7 @@ export const homePageStyle = (theme: Theme) => css`
     margin-bottom: 36px;
     gap: 8px;
     > #home_page_title {
-      font-size: 36px;
+      font-size: ${theme.sizes.title};
     }
     > img {
       width: 60px;
@@ -32,7 +32,7 @@ export const homePageStyle = (theme: Theme) => css`
     border-radius: 50px;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    font-size: 16px;
+    font-size: ${theme.sizes.contents};
     transition:
       transform 0.3s ease,
       box-shadow 0.3s ease;
