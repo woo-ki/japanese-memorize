@@ -1,15 +1,29 @@
 import { radioButtonGroupStyle } from '@components/pages/dictionaryPage/RadioButtonGroup/style.ts';
+import { Dispatch, SetStateAction } from 'react';
+import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
+import { JlptWordLevelType } from '@hooks/useIndexedDB/utils/fetchJlptWord.ts';
 
 type RadioButtonGroupPropsType<T> = {
-  name: string;
+  name: '레벨 필터' | '품사 필터';
   list: T[];
   value: T;
-  // eslint-disable-next-line no-unused-vars
-  setter: (data: T) => void;
+  setWordSearchParams: Dispatch<SetStateAction<WordSearchParamsType>>;
 };
-const RadioButtonGroup = <T extends string>({ name, list, value, setter }: RadioButtonGroupPropsType<T>) => {
+const RadioButtonGroup = <T extends string | JlptWordLevelType | '전체'>({
+  name,
+  list,
+  value,
+  setWordSearchParams,
+}: RadioButtonGroupPropsType<T>) => {
   const handleClick = (data: T) => {
-    setter(data);
+    setWordSearchParams((prev) => {
+      if (name === '레벨 필터') {
+        return { ...prev, level: data as JlptWordLevelType | '전체', nowPage: 1 };
+      } else if (name === '품사 필터') {
+        return { ...prev, part: data as string, nowPage: 1 };
+      }
+      return prev;
+    });
   };
 
   return (

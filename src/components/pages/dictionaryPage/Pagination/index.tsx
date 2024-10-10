@@ -1,13 +1,13 @@
 import { paginationStyle } from '@components/pages/dictionaryPage/Pagination/style.ts';
-import { FC, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { WordSearchParamsType } from '@hooks/useIndexedDB/types.ts';
 
 type PaginationPropsType = {
   nowPage: number;
   totalPage: number;
-  // eslint-disable-next-line no-unused-vars
-  setPage: (page: number) => void;
+  setWordSearchParams: Dispatch<SetStateAction<WordSearchParamsType>>;
 };
-const Pagination: FC<PaginationPropsType> = ({ nowPage, totalPage, setPage }) => {
+const Pagination: FC<PaginationPropsType> = ({ nowPage, totalPage, setWordSearchParams }) => {
   const [pageList, setPageList] = useState<number[]>([]);
   const [pageSize] = useState(5);
 
@@ -29,8 +29,13 @@ const Pagination: FC<PaginationPropsType> = ({ nowPage, totalPage, setPage }) =>
     createPageList();
   }, [nowPage, totalPage]);
 
+  const setPage = (nowPage: number) => {
+    setWordSearchParams((prev) => ({ ...prev, nowPage }));
+  };
+
   const moveBack = () => {
     if (nowPage === 1) return;
+
     setPage(nowPage - 1);
   };
   const moveNext = () => {

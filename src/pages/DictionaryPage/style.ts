@@ -14,11 +14,6 @@ export const dictionaryPageStyle = (theme: Theme) => css`
     background: ${theme.colors.background};
   }
 
-  > #word_list_container {
-    ${theme.utils.getFlex('column')}
-    gap: 8px;
-  }
-
   &::-webkit-scrollbar {
     display: none;
   }

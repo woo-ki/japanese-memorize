@@ -1,8 +1,8 @@
 import { DBConfigType } from '@hooks/useIndexedDB/DBConfig.ts';
-import { dbOperations } from '@hooks/useIndexedDB/utils/dbOperations.ts';
 import { useEffect } from 'react';
 import { openDB } from '@hooks/useIndexedDB/utils/openDB.ts';
 import { useAppStore } from '@hooks/useAppStore';
+import { getWordLIstFromDB } from '@hooks/useIndexedDB/utils/getWordLIstFromDB.ts';
 
 const config: DBConfigType = {
   name: '',
@@ -20,10 +20,25 @@ export const useIndexedDB = () => {
   }
 
   const { isDataLoading, setIsDataLoading, openAlert } = useAppStore('common');
+  const { setJlptList } = useAppStore('jlpt');
 
   const init = async () => {
     if (!dbRef.current) {
       dbRef.current = await openDB(config, openAlert, setIsDataLoading);
+
+      if (dbRef.current) {
+        const jlptList = await getWordLIstFromDB(dbRef.current, 'jlpt-word');
+        if (jlptList.length > 0) {
+          setJlptList(jlptList);
+        } else {
+          openAlert({
+            type: 'caution',
+            title: '알림',
+            message: '데이터를 불러오는데 실패했어요\n잠시 후 페이지를 새로고침 해주세요',
+            confirmButton: '확인',
+          }).then();
+        }
+      }
     }
   };
 
@@ -31,7 +46,18 @@ export const useIndexedDB = () => {
     init().then();
   }, []);
 
-  return dbOperations(dbRef, isDataLoading, setIsDataLoading);
+  const closeDB = () => {
+    if (dbRef.current) {
+      dbRef.current.close();
+      dbRef.current = null;
+    }
+  };
+
+  return {
+    isDataLoading,
+    closeDB,
+    db: dbRef.current,
+  };
 };
 
 export const initDB = async ({ name, version, objectStoresMeta }: DBConfigType): Promise<boolean> => {

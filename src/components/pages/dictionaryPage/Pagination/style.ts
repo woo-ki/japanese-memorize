@@ -2,7 +2,7 @@ import { css, Theme } from '@emotion/react';
 
 export const paginationStyle = (theme: Theme) => css`
   ${theme.utils.getFlexCenter()}
-  margin-top: 16px;
+  margin-top: 8px;
 
   > #pagination_item {
     display: flex;
