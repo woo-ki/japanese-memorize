@@ -24,4 +24,23 @@ export const homePageStyle = (theme: Theme) => css`
     gap: 16px;
     width: 100%;
   }
+
+  > .optimize-button {
+    background-color: ${theme.colors.button}; /* 사용자 색상 코드 사용 */
+    border: none;
+    padding: 8px 24px 8px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    ${theme.utils.getFlexCenter()};
+    gap: 2px;
+
+    > span {
+      color: ${theme.colors.white};
+    }
+  }
 `;

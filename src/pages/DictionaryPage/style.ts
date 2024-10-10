@@ -4,6 +4,7 @@ export const dictionaryPageStyle = (theme: Theme) => css`
   width: 100%;
   height: 100%;
   overflow: auto;
+  -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤을 위한 설정 */
 
   > #search_container {
     ${theme.utils.getFlex('column')}

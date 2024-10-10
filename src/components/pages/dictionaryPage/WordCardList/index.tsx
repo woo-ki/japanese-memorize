@@ -18,20 +18,21 @@ const WordCardList: FC<WordCardListPropsType> = ({ containerRef, wordSearchParam
   const [filteredWordList, setFilteredWordList] = useState<JlptWordType[]>([]);
   const [showWordList, setShowWordList] = useState<JlptWordType[]>([]);
   const [totalPage, setTotalPage] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setFilteredWordList(getFilteredList(wordSearchParams.level, wordSearchParams.keyword, wordSearchParams.part));
-    moveDirectionRef.current = 'top';
   }, [jlptList, wordSearchParams.level, wordSearchParams.keyword, wordSearchParams.part]);
 
   useEffect(() => {
+    moveDirectionRef.current = 'top';
     setTotalPage(getTotalPage(filteredWordList.length, wordSearchParams.pageSize));
     setShowWordList(getShowList(filteredWordList, wordSearchParams.nowPage, wordSearchParams.pageSize));
   }, [filteredWordList]);
 
   useEffect(() => {
-    setShowWordList(getShowList(filteredWordList, wordSearchParams.nowPage, wordSearchParams.pageSize));
     moveDirectionRef.current = 'bottom';
+    setShowWordList(getShowList(filteredWordList, wordSearchParams.nowPage, wordSearchParams.pageSize));
   }, [wordSearchParams.nowPage]);
 
   useEffect(() => {
@@ -42,7 +43,13 @@ const WordCardList: FC<WordCardListPropsType> = ({ containerRef, wordSearchParam
       if (moveDirectionRef.current === 'bottom') {
         scrollHeight = div.scrollHeight;
       }
-      div.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      timeoutRef.current = setTimeout(() => {
+        div.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+      }, 10);
     });
   }, [showWordList]);
 

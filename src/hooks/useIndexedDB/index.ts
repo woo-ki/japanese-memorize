@@ -19,7 +19,7 @@ export const useIndexedDB = () => {
     throw new Error('indexedDB를 먼저 initialize 해주세요');
   }
 
-  const { isDataLoading, setIsDataLoading, openAlert } = useAppStore('common');
+  const { isDataLoading, setIsDataLoading, openAlert, needOptimize, setNeedOptimize } = useAppStore('common');
   const { setJlptList } = useAppStore('jlpt');
 
   const init = async () => {
@@ -27,6 +27,7 @@ export const useIndexedDB = () => {
       dbRef.current = await openDB(config, openAlert, setIsDataLoading);
 
       if (dbRef.current) {
+        setNeedOptimize(false);
         const jlptList = await getWordLIstFromDB(dbRef.current, 'jlpt-word');
         if (jlptList.length > 0) {
           setJlptList(jlptList);
@@ -34,10 +35,12 @@ export const useIndexedDB = () => {
           openAlert({
             type: 'caution',
             title: '알림',
-            message: '데이터를 불러오는데 실패했어요\n잠시 후 페이지를 새로고침 해주세요',
+            message: '데이터를 불러오는데 실패했어요\n잠시 후 다시시도 해 주세요',
             confirmButton: '확인',
           }).then();
         }
+      } else {
+        setNeedOptimize(true);
       }
     }
   };
@@ -55,8 +58,10 @@ export const useIndexedDB = () => {
 
   return {
     isDataLoading,
+    init,
     closeDB,
     db: dbRef.current,
+    needOptimize,
   };
 };
 
